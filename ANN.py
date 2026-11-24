@@ -10,9 +10,9 @@ class RegressionNet(torch.nn.Module):
     def __init__(self):
         super().__init__()
         self.network = nn.Sequential(
-            nn.Linear(5, 16), nn.ReLU(), nn.Dropout(0.2),   # 输入层
-            nn.Linear(16, 16), nn.ReLU(), nn.Dropout(0.2),  # 隐藏层
-            nn.Linear(16, 1)                                # 输出层
+            nn.Linear(5, 16), nn.ReLU(), nn.Dropout(0.2),   # input layer
+            nn.Linear(16, 16), nn.ReLU(), nn.Dropout(0.2),  # hidden layer
+            nn.Linear(16, 1)                                # output layer
         )       
     def forward(self, x):
         return self.network(x)
@@ -46,20 +46,20 @@ class NeuralNetworkRegression:
         y_train_scaled = self.scaler_y.fit_transform(y_train)
         y_test_scaled = self.scaler_y.transform(y_test)
 
-        # 转换为 Tensor
+        # Change to Tensor
         X_train_tensor = torch.tensor(X_train_scaled, dtype=torch.float32)
         y_train_tensor = torch.tensor(y_train_scaled, dtype=torch.float32)
         X_test_tensor = torch.tensor(X_test_scaled, dtype=torch.float32)
 
-        # DataLoader 打包
+        # DataLoader Packaging 
         train_loader = DataLoader(TensorDataset(X_train_tensor, y_train_tensor), batch_size=16, shuffle=True)
 
-        # 模型、损失函数、优化器
+        # Define the model, loss function, and optimizer
         self.net = RegressionNet()
         criterion = nn.MSELoss()
         optimizer = torch.optim.Adam(self.net.parameters(), lr=0.001)
 
-        # 训练 500 轮
+        # Train for 500 runs
         self.net.train()
         for epoch in range(800): 
             for features, targets in train_loader:
@@ -72,13 +72,13 @@ class NeuralNetworkRegression:
             if (epoch + 1) % 100 == 0:
                 print(f'Epoch {epoch+1}, Loss: {loss.item():.4f}')
 
-        # 评估模型
+        # Define the assessment model
         self.net.eval()
         with torch.no_grad():
             train_pred_scaled = self.net(X_train_tensor).numpy()
             test_pred_scaled = self.net(X_test_tensor).numpy()
 
-            # 标准化后的预测值还原
+            # Inverse transform the standardized predicted values
             train_pred = self.scaler_y.inverse_transform(train_pred_scaled)
             test_pred = self.scaler_y.inverse_transform(test_pred_scaled)
 
@@ -95,7 +95,7 @@ class NeuralNetworkRegression:
     def prediction(self):
         if self.net is None:
             return None        
-        df = pd.read_csv(r'') # 输入需要预测的文件地址
+        df = pd.read_csv(r'') # Please input address of files to be predicted
         target_col = "ultimate_strength KN"
         X = df.drop(target_col, axis=1).values if target_col in df.columns else df.values        
         X_scaled = self.scaler_X.transform(X)

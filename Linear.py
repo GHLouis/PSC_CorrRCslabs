@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import Ridge  # 使用带L2正则化的岭回归替代普通线性回归
+from sklearn.linear_model import Ridge  # Using Ridge regression with L2 regularization to replace linear regression.
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import r2_score, mean_squared_error
 
@@ -21,7 +21,7 @@ class LinearRegression:
         self.y_test = self.test_df[target_col].values
         self.feature_num = self.X_train.shape[1]
 
-        # 正则化
+        # Regularization
         self.X_Scale = StandardScaler()
         X_train_scaled = self.X_Scale.fit_transform(self.X_train)
         X_test_scaled = self.X_Scale.transform(self.X_test)
@@ -30,7 +30,7 @@ class LinearRegression:
         self.linear = Ridge(alpha=0.5)
         self.linear.fit(X_train_scaled, self.y_train)
 
-        # 计算训练集和测试集的 r2
+        # Calculate r2 for training and testing sets
         y_train_pred = self.linear.predict(X_train_scaled)
         train_r2 = r2_score(self.y_train, y_train_pred)
         train_mse = mean_squared_error(self.y_train, y_train_pred)
@@ -47,7 +47,7 @@ class LinearRegression:
     def prediction(self):
         if self.linear is None:
             return None
-        df = pd.read_csv(r'') # 输入需要预测的文件地址
+        df = pd.read_csv(r'') # Please input address of files to be predicted
         target_col = "ultimate_strength KN"
         X = df.drop(target_col, axis=1).values if target_col in df.columns else df.values
         input_scale = self.X_Scale.transform(X)

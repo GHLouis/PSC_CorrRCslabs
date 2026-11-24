@@ -22,7 +22,7 @@ class SVMRegression:
         self.y_test = self.test_df[target_col].values
         self.feature_num = self.X_train.shape[1]
 
-        # 正则化
+        # Regularization
         self.X_Scale = StandardScaler()
         self.y_Scale = StandardScaler()
 
@@ -31,7 +31,7 @@ class SVMRegression:
 
         y_train_scaled = self.y_Scale.fit_transform(self.y_train.reshape(-1, 1)).ravel()
 
-        # 支持向量机网格搜索
+        # Support Vector Machine grid search
         self.svm = SVR(
             kernel='rbf',
             C=27,
@@ -41,13 +41,13 @@ class SVMRegression:
 
         self.svm.fit(X_train_scaled, y_train_scaled)
 
-        # 计算训练集和测试集的 r2
+        # Calculate r2 for training and testing sets
         y_train_pred_scaled = self.svm.predict(X_train_scaled)
         y_train_pred = self.y_Scale.inverse_transform(y_train_pred_scaled.reshape(-1, 1)).ravel()
         train_r2 = r2_score(self.y_train, y_train_pred)
         train_mse = mean_squared_error(self.y_train, y_train_pred)
 
-        # 评估测试集表现
+        # Evaluate test set performance
         y_test_pred_scaled = self.svm.predict(X_test_scaled)
         y_test_pred = self.y_Scale.inverse_transform(y_test_pred_scaled.reshape(-1, 1)).ravel()
         test_r2 = r2_score(self.y_test, y_test_pred)
@@ -61,7 +61,7 @@ class SVMRegression:
     def prediction(self):
         if self.svm is None:
             return None
-        df = pd.read_csv(r"") # 输入需要预测的文件地址
+        df = pd.read_csv(r"") # Please input address of files to be predicted
         target_col = "ultimate_strength KN"
         X = df.drop(target_col, axis=1).values if target_col in df.columns else df.values
         input_scale = self.X_Scale.transform(X)

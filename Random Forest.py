@@ -21,16 +21,16 @@ class ForestRegression:
         self.y_test = self.test_df[target_col].values
         self.feature_num = self.X_train.shape[1]
 
-        # 正则化
+        # Regularization
         self.X_Scale = StandardScaler()
         X_train_scaled = self.X_Scale.fit_transform(self.X_train)
         X_test_scaled = self.X_Scale.transform(self.X_test)
 
-        # 随机森林网格搜索（通过限制树的深度和叶子节点来防止过拟合）
+        # Random Forest grid search (by limiting tree depth and leaf nodes to prevent overfitting)
         self.forest = RandomForestRegressor(n_estimators=120,max_depth=12,min_samples_leaf=1,min_samples_split=2,random_state=42)
         self.forest.fit(X_train_scaled, self.y_train)
 
-        # 计算训练集和测试集的 r2
+        # Calculate r2 for training and testing sets
         y_train_pred = self.forest.predict(X_train_scaled)
         train_r2 = r2_score(self.y_train, y_train_pred)
         train_mse = mean_squared_error(self.y_train, y_train_pred)
@@ -47,7 +47,7 @@ class ForestRegression:
     def prediction(self):
         if self.forest is None:
             return None
-        df = pd.read_csv(r'') # 输入需要预测的文件地址
+        df = pd.read_csv(r'') # Please input address of files to be predicted
         target_col = "ultimate_strength KN"
         X = df.drop(target_col, axis=1).values if target_col in df.columns else df.values
         input_scale = self.X_Scale.transform(X)

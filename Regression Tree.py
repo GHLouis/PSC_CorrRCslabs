@@ -21,12 +21,12 @@ class RegressionTree:
         self.y_test = self.test_df[target_col].values
         self.feature_num = self.X_train.shape[1]
 
-        # 正则化
+        # Regularization
         self.X_Scale = StandardScaler()
         X_train_scaled = self.X_Scale.fit_transform(self.X_train)
         X_test_scaled = self.X_Scale.transform(self.X_test)
 
-        # 决策树网格搜索
+        # Decision Tree grid search
         self.treeModel = DecisionTreeRegressor(
             max_depth=12,
             min_samples_split=3,
@@ -37,7 +37,7 @@ class RegressionTree:
 
         self.treeModel.fit(X_train_scaled, self.y_train)
 
-        # 计算训练集和测试集的 r2
+        # Calculate r2 for training and testing sets
         y_train_pred = self.treeModel.predict(X_train_scaled)
         train_r2 = r2_score(self.y_train, y_train_pred)
         train_mse = mean_squared_error(self.y_train, y_train_pred)
@@ -54,7 +54,7 @@ class RegressionTree:
     def prediction(self):
         if self.treeModel is None:
             return None
-        df = pd.read_csv(r"") # 输入需要预测的文件地址
+        df = pd.read_csv(r"") # Please input address of files to be predicted
         target_col = "ultimate_strength KN"
         X = df.drop(target_col, axis=1).values if target_col in df.columns else df.values
         input_scale = self.X_Scale.transform(X)

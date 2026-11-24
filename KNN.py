@@ -21,25 +21,25 @@ class KNNRegression:
         self.y_test = self.test_df[target_col].values
         self.feature_num = self.X_train.shape[1]  
 
-        # 正则化
+        # Regularization
         self.X_Scale = StandardScaler()
         X_train_scaled = self.X_Scale.fit_transform(self.X_train)
         X_test_scaled = self.X_Scale.transform(self.X_test)
 
-        # KNN 网格搜索
+        # KNN grid search
         param_grid = {
-            'n_neighbors': [3, 5, 7, 9, 11, 13],   # 邻居数量
-            'weights': ['uniform', 'distance']   # 权重策略
+            'n_neighbors': [3, 5, 7, 9, 11, 13],   # The number of neighbors
+            'weights': ['uniform', 'distance']   # The weighting strategy
         }
 
-        # LOOCV评估方法
+        # LOOCV based assessment
         loocv = LeaveOneOut()
         knn = KNeighborsRegressor()
 
         self.knn = KNeighborsRegressor(n_neighbors=3, metric='manhattan', weights='uniform')
         self.knn.fit(X_train_scaled, self.y_train)
 
-        # 计算训练集和测试集的 r2
+        # Calculate r2 for training and testing sets
         y_train_pred = self.knn.predict(X_train_scaled)
         train_r2 = r2_score(self.y_train, y_train_pred)
         train_mse = mean_squared_error(self.y_train, y_train_pred)
@@ -56,7 +56,7 @@ class KNNRegression:
     def prediction(self):
         if self.knn is None:
             return None
-        df = pd.read_csv(r'') # 输入需要预测的文件地址
+        df = pd.read_csv(r'') # Please input address of files to be predicted
         target_col = "ultimate_strength KN"
         X = df.drop(target_col, axis=1).values if target_col in df.columns else df.values
         

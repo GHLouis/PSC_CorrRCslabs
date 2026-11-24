@@ -21,24 +21,24 @@ class XGBoostRegression():
         self.y_test = self.test_df[target_col].values
         self.feature_num = self.X_train.shape[1]
 
-        # 正则化
+        # Regularization
         self.X_Scale = StandardScaler()
         X_train_scaled = self.X_Scale.fit_transform(self.X_train)
         X_test_scaled = self.X_Scale.transform(self.X_test)
 
-        # XGBoost 训练
+        # XGBoost Training
         self.xgb = XGBRegressor(
-            n_estimators=300,   # 树的数量
-            max_depth=3,        # 树的最大深度
-            subsample = 1.0,    # 随机抽取样本
-            learning_rate=0.05,  # 学习率
+            n_estimators=300,       # Number of trees
+            max_depth=3,            # Maximum depth of trees
+            subsample = 1.0,        # Randomly sample features
+            learning_rate=0.05,     # Learning rate
             random_state=42
         )
         self.xgb.fit(
             X_train_scaled, self.y_train
         )
         
-        # 计算训练集和测试集的 r2
+        # Calculate r2 for training and testing sets
         y_train_pred = self.xgb.predict(X_train_scaled)
         train_r2 = r2_score(self.y_train, y_train_pred)
         train_mse = mean_squared_error(self.y_train, y_train_pred)
@@ -55,7 +55,7 @@ class XGBoostRegression():
     def prediction(self, input_data):
         if self.xgb is None:
             return None
-        df = pd.read_csv(r"") # 输入需要预测的文件地址
+        df = pd.read_csv(r"") # Please input address of files to be predicted
         target_col = "ultimate_strength KN"
         X = df.drop(target_col, axis=1).values if target_col in df.columns else df.values
         input_scale = self.X_Scale.transform(X)
